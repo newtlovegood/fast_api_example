@@ -26,7 +26,7 @@ class UserBase(BaseModel):
     email: EmailStr
     username: Optional[str] = None
     is_active: Optional[bool] = True
-    is_superuser: bool = False
+    is_superuser: Optional[bool] = False
     posts: List[Post] = []
 
 
@@ -41,6 +41,9 @@ class UserUpdate(UserBase):
 class User(UserBase):
     id: Optional[int] = None
     hashed_password: str
+    
+    class Config:
+        orm_mode = True
 
 
 class Comment(BaseModel):

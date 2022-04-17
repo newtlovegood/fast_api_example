@@ -7,8 +7,10 @@
 {% block content %}
   <h1>All posts</h1>
   {% for post in posts %}
+    {{ post.id}}
     {{ post.title }}
-    {{ user.content }}
+    <div>{{ post.content }}</div>
+    <br>
   {% endfor %}
 {% endblock %}
 

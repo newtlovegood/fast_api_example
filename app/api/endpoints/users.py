@@ -1,3 +1,9 @@
+import email
+from tkinter import N
+from typing import List
+import logging
+import random
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
@@ -7,17 +13,35 @@ from app import crud, models, schemas
 from app.api import session_gen
 
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/users', response_class=HTMLResponse)
-def get_all_users(request: Request, db: Session = Depends(session_gen.get_db)):
-    users = crud.user.get_all(db)
-    context = {
-        'request': request,
-        'users': users,
+@router.get('/users', response_model=List[schemas.User])
+def get_all_users(db: Session = Depends(session_gen.get_db)):
+    return crud.user.get_all(db)
 
-    }
-    return templates.TemplateResponse('users.html', context)
+@router.get('/user/{username}', response_model=schemas.User)
+def get_single_users(username: str, db: Session = Depends(session_gen.get_db)):
+    return crud.user.get_by_username(db, username)
+
+@router.post('/users/create')
+def create_user(user_in: schemas.UserCreate, db: Session = Depends(session_gen.get_db)):
+
+    if not user_in.username:
+        user_in.username = user_in.email.split('@')[0]
+
+    # check if username is Unique
+    while True:
+        try:
+            user = crud.user.create(db, user_in)
+        except Exception as e:
+            logger.info(e)
+            user_in.username += str(random.randint(100, 999))
+        else:
+            break
+        
+    return user
