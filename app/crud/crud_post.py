@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.schemas import Post, PostCreate
+from app.schemas import PostCreate
+from app.models import Post
 
 
 class CRUDPost:
@@ -9,20 +10,20 @@ class CRUDPost:
 
     def get_multi_by_author(self, db: Session, author_id: int, limit: int = 20):
         return (
-            db.query()
+            db.query(Post)
             .filter(Post.author_id == author_id)
             .limit(limit)
             .all()
         )
 
     def get_all(self, db: Session):
-        return db.query().all()
+        return db.query(Post).all()
 
-    def create(self, db: Session, title: str, content: str, author_id: int):
-        post = PostCreate(
-            title=title,
-            content=content,
-            author_id=author_id,
+    def create(self, db: Session, obj_in=PostCreate):
+        post = Post(
+            title=obj_in.title,
+            content=obj_in.content,
+            author_id=obj_in.author_id,
 
         )
         db.add(post)

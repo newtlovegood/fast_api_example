@@ -1,4 +1,5 @@
 import datetime
+from enum import unique
 
 import sqlalchemy
 from sqlalchemy import Boolean, Integer, Column, ForeignKey, String, DateTime
@@ -24,7 +25,8 @@ class Post(Base):
     __tablename__ = 'posts'
 
     id = Column(Integer, primary_key=True, index=True)
-    content = Column(String, index=True)
+    title = Column(String, unique=True, index=True)
+    content = Column(String)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
     author_id = Column(Integer, ForeignKey("users.id"))

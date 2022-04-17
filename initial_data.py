@@ -5,8 +5,8 @@ from app.db import SessionLocal, engine
 from app import crud, schemas, models
 from app.config import settings
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__) 
 
 
 def init_db(db: Session) -> None:

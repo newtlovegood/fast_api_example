@@ -2,8 +2,8 @@ import logging
 
 from app.db import SessionLocal
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__)  
 
 
 def init() -> None:

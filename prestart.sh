@@ -1,7 +1,10 @@
 #! /usr/bin/env bash
 
 # Let the DB start
-python /app/pre_start.py
+python pre_start.py
 
 # Create initial data in DB
-python /app/initial_data.py
+python initial_data.py
+
+# Populate with test data
+python test_population.py
