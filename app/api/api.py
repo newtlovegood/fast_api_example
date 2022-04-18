@@ -2,7 +2,6 @@ from typing import Generator
 
 from fastapi import APIRouter
 
-from app.db import SessionLocal
 from .endpoints import posts, users
 
 api_router = APIRouter()
