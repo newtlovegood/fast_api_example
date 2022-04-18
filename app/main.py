@@ -1,3 +1,6 @@
+from json.tool import main
+import uvicorn
+
 import logging 
 import logging.config
 from time import asctime
@@ -5,10 +8,11 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from . import models, schemas
-from .config import settings
-from .db import engine
-from .api.api import api_router
+import app.models as models
+import app.schemas as schemas
+from app.config import settings
+from app.db import engine
+from app.api.api import api_router
 from app.auth.api import auth_router
 
 
@@ -38,3 +42,6 @@ def home(request: Request):
 
 app.include_router(api_router)
 app.include_router(auth_router)
+
+if __name__ == "__main__":  
+    uvicorn.run(app, host="0.0.0.0", port=8000)

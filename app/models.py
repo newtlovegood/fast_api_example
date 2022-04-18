@@ -6,7 +6,7 @@ from sqlalchemy import Boolean, Integer, Column, ForeignKey, String, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from .db import Base
+from app.db import Base
 
 
 class User(Base):

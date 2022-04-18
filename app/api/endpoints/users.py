@@ -1,3 +1,4 @@
+import sqlite3
 from typing import List
 import logging
 import random
@@ -38,12 +39,16 @@ def create_user(user_in: schemas.UserCreate, db: Session = Depends(session_gen.g
     if not user_in.username:
         user_in.username = user_in.email.split('@')[0]
 
-    # check if username is Unique
+    # check if email is Unique
+    if crud.user.get_by_email(db, user_in.email):
+        return HTTPException(status_code=400, detail="Email is already used")
+    
     while True:
         try:
             user = crud.user.create(db, user_in)
         except Exception as e:
             logger.info(e)
+            db.rollback()
             user_in.username += str(random.randint(100, 999))
         else:
             break
