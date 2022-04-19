@@ -1,3 +1,4 @@
+from tkinter import N
 from typing import Optional, List
 from datetime import datetime
 
@@ -7,6 +8,9 @@ from pydantic import BaseModel, EmailStr
 class PostBase(BaseModel):
     title: str
     content: str
+    
+class PostUpdate(PostBase):
+    pass
 
 
 class PostCreate(PostBase):
@@ -34,7 +38,9 @@ class UserCreate(UserBase):
     password: str
 
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
     password: Optional[str] = None
 
 

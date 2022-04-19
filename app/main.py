@@ -17,7 +17,7 @@ from app.auth.api import auth_router
 
 
 # setup loggers
-logging.basicConfig(filename='logs.log', level=logging.INFO,
+logging.basicConfig(filename='logs.log', level=logging.DEBUG,
                     format="%(asctime)s loglevel=%(levelname)-6s logger=%(name)s %(funcName)s() L%(lineno)-4d %(message)s   call_trace=%(pathname)s L%(lineno)-4d"
 )
 

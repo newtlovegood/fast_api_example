@@ -1,6 +1,7 @@
+from turtle import pos
 from sqlalchemy.orm import Session
 
-from app.schemas import PostCreate
+from app.schemas import PostCreate, PostUpdate
 from app.models import Post
 
 
@@ -31,14 +32,13 @@ class CRUDPost:
         db.refresh(post)
         return post
 
-    def update(self, db: Session, id: int, content: str = None, title: str = None):
+    def update(self, db: Session, id: int, obj_in=PostUpdate):
         post = self.get_by_id(db, id)
-        if content:
-            post.content = content
-        if title:
-            post.title = title
+        post.content = obj_in.content
+        post.title = obj_in.title
         db.commit()
         db.refresh(post)
+        return post
 
     def delete(self, db: Session, id: int):
         post = self.get_by_id(db, id)

@@ -1,11 +1,13 @@
+from curses.ascii import HT
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from starlette.templating import Jinja2Templates
 
 from app import crud, models, schemas
 from app.api import session_gen
+from app.auth.endpoints.auth import get_current_active_user
 
 
 router = APIRouter()
@@ -37,10 +39,40 @@ def get_single_post(id: int, db: Session = Depends(session_gen.get_db)):
 
 
 @router.post('/posts/create', response_model=schemas.Post)
-def create_post(post_in: schemas.PostCreate, db: Session = Depends(session_gen.get_db)):
-    post = crud.post.create(db, post_in)
-    # Author ID to be taken from currrently logged in user 
+def create_post(post_base: schemas.PostBase, 
+                current_user: schemas.User = Depends(get_current_active_user),
+                db: Session = Depends(session_gen.get_db)):
+    
+    post_in = schemas.PostCreate(**post_base.dict(), 
+                                 author_id=current_user.id)
     # Some validation if needed
     # ...
+    post = crud.post.create(db, post_in)
     return post
 
+
+@router.delete('/posts/delete/{id}')
+def delete_post(id: int, 
+                current_user: schemas.User = Depends(get_current_active_user),
+                db: Session = Depends(session_gen.get_db)):
+    
+    # if cur user is author or superuser - allow delete
+    post = crud.post.get_by_id(db, id)
+    if not post:
+        raise HTTPException(404, 'Post not found')
+    if not (post.author_id == current_user.id or current_user.is_superuser):
+        raise HTTPException(403, 'Deletion is forbidden')   
+    crud.post.delete(db, id)
+
+
+@router.put('/posts/update/{id}')
+def update_post(id: int,
+                post_in: schemas.PostUpdate,
+                current_user: schemas.User = Depends(get_current_active_user),
+                db: Session = Depends(session_gen.get_db)):
+    post = crud.post.get_by_id(db, id)
+    if not post:
+        raise HTTPException(404, 'Post not found')
+    if not post.author_id == current_user.id:
+        raise HTTPException(403, 'Editing is forbidden')
+    return crud.post.update(db, id, post_in)
