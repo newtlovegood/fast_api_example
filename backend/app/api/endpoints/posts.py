@@ -1,4 +1,3 @@
-from curses.ascii import HT
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse
@@ -39,11 +38,11 @@ def get_single_post(id: int, db: Session = Depends(session_gen.get_db)):
 
 
 @router.post('/posts/create', response_model=schemas.Post)
-def create_post(post_base: schemas.PostBase, 
+def create_post(post_base: schemas.PostBase,
                 current_user: schemas.User = Depends(get_current_active_user),
                 db: Session = Depends(session_gen.get_db)):
     
-    post_in = schemas.PostCreate(**post_base.dict(), 
+    post_in = schemas.PostCreate(**post_base.dict(),
                                  author_id=current_user.id)
     # Some validation if needed
     # ...
@@ -52,7 +51,7 @@ def create_post(post_base: schemas.PostBase,
 
 
 @router.delete('/posts/delete/{id}')
-def delete_post(id: int, 
+def delete_post(id: int,
                 current_user: schemas.User = Depends(get_current_active_user),
                 db: Session = Depends(session_gen.get_db)):
     
