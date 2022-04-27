@@ -76,6 +76,6 @@ def update_user(id: int,
     user = crud.user.get_by_id(db, id)
     if not user:
         raise HTTPException(404, 'User not found')
-    if not current_user.id == user.id:
+    if not current_user.id == user.id and not current_user.is_superuser:
         raise HTTPException(403, 'Editing is forbidden')
     return crud.user.update(db, id, user_in)

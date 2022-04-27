@@ -7,6 +7,7 @@ from time import asctime
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 
 import app.models as models
 import app.schemas as schemas
@@ -27,6 +28,18 @@ logging.basicConfig(filename='logs.log', level=logging.DEBUG,
 models.Base.metadata.create_all(bind=engine)  # usually ALEMBIC is used for this purpose + migrations
 
 app = FastAPI()
+
+origins = [
+    '*'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 templates = Jinja2Templates(directory='app/templates')
 
