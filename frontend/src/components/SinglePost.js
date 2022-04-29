@@ -18,7 +18,5 @@ export default function SinglePost() {
             <div className='post-md' dangerouslySetInnerHTML={{__html:htmlStore}} />
         </div>
     )
-    
 
-	
 }

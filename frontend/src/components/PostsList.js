@@ -4,7 +4,6 @@ import  DiaryService  from  '../DiaryService';
 const  diaryService  =  new  DiaryService();
 
 class  PostsList  extends  Component {
-
 	constructor(props) {
 		super(props);
 		this.state  = {

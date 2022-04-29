@@ -1,8 +1,9 @@
 import  React, { Component } from  'react';
-import { BrowserRouter, Route, Routes } from  'react-router-dom'
-import  PostsList  from  './components/PostsList'
-import  SinglePost  from  './components/SinglePost'
-import  './App.css';
+import { BrowserRouter, Route, Routes } from  'react-router-dom';
+import  PostsList  from  './components/PostsList';
+import  SinglePost  from  './components/SinglePost';
+import MyEditor from './components/Compose';
+import  './css/App.css';
 
 
 const  BaseLayout  = () => (
@@ -14,7 +15,7 @@ const  BaseLayout  = () => (
     </button>
     <div  className="collapse navbar-collapse"  id="navbarNavAltMarkup">
       <div  className="navbar-nav">
-        <a  className="nav-item nav-link"  href="/">Compose</a>
+        <a  className="nav-item nav-link"  href="/compose">Compose</a>
         <a  className="nav-item nav-link"  href="/">ToDo</a>
         <a  className="nav-item nav-link"  href="/customer">Log In</a>
       </div>
@@ -23,6 +24,7 @@ const  BaseLayout  = () => (
     <div  className="content">
       <Routes>
         <Route  path="/"  exact  element={<PostsList />} />
+        <Route  path="/compose" element={<MyEditor />} />
         <Route  path="/posts" element={<PostsList />} />
         <Route  path="/posts/:id"  element={<SinglePost />} />
       </Routes>
