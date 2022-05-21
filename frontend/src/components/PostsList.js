@@ -22,7 +22,6 @@ class  PostsList  extends  Component {
 
 	render() {
 		let href;
-		console.log('render');
 		return (
 			<div className='posts'>
 				{this.state.posts.map((post) => (

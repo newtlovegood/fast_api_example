@@ -1,7 +1,3 @@
-import datetime
-from enum import unique
-
-import sqlalchemy
 from sqlalchemy import Boolean, Integer, Column, ForeignKey, String, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -19,6 +15,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean(), default=False)
     posts = relationship('Post', back_populates="authors")
+    todolist = relationship('ToDoList', back_populates='owner')
 
 
 class Post(Base):
@@ -33,4 +30,11 @@ class Post(Base):
     authors = relationship('User', back_populates='posts')
 
 
+class ToDoList(Base):
+    __tablename__ = 'todolists'
+    
+    id = Column(Integer, primary_key=True, index=True) 
+    items = Column(String)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship('User', back_populates='todolist')
 

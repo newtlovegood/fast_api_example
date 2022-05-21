@@ -8,14 +8,16 @@ const  diaryService  =  new  DiaryService();
 export default function SinglePost() {
     let { id } = useParams();
     let converter = new showdown.Converter(),
-        [htmlStore, setHtml] = useState();
+        [content_processed, setContent] = useState(),
+        [title, setTitle] = useState();
     diaryService.getPost(id).then(response => {
-        setHtml(converter.makeHtml(response.content));
-        console.log(htmlStore);
+        setTitle(response.title);
+        setContent(converter.makeHtml(response.content));
     })
     return (
         <div>
-            <div className='post-md' dangerouslySetInnerHTML={{__html:htmlStore}} />
+            <h1>{title}</h1>
+            <div className='post-md' dangerouslySetInnerHTML={{__html:content_processed}} />
         </div>
     )
 

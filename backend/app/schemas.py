@@ -5,9 +5,21 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
+class ToDoListBase(BaseModel):
+    items: str
+    
+
+class ToDoListCreate(ToDoListBase):
+    owner_id: int
+    
+    class Config:
+        orm_mode = True
+
+
 class PostBase(BaseModel):
     title: str
     content: str
+
     
 class PostUpdate(PostBase):
     pass
@@ -32,6 +44,7 @@ class UserBase(BaseModel):
     is_active: Optional[bool] = True
     is_superuser: Optional[bool] = False
     posts: List[Post] = []
+    todo: str
 
 
 class UserCreate(UserBase):
@@ -59,6 +72,10 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+    
+class LoginData(BaseModel):
+    username: str
+    password: str
 
 
 
