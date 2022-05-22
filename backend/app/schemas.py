@@ -1,4 +1,3 @@
-from tkinter import N
 from typing import Optional, List
 from datetime import datetime
 

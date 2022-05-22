@@ -1,31 +1,35 @@
 import  React, { useState } from  'react';
-import { Button, Card, Form } from 'react-bootstrap';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form } from 'react-bootstrap';
+import { nanoid } from 'nanoid';
 import  '../../css/todo.css';
 
-import ToDoItem from './toDoItem';
 
+function FormTodo({ todo, addTodo, index, changeTodo, changeIsDone, removeTodo }) {
 
-
-function FormTodo({ todo, addTodo, index, changeTodo, removeTodo }) {
-
-  
+    
     const [is_done, setDone] = useState(false);
     const [value, setValue] = useState(todo.text);
 
     const handleChange = e => {
+      changeTodo(e.target.value, index);
       setValue(e.target.value);
-      changeTodo(value, index);
     };
 
     const markDone = () => {
-        todo.is_done = !todo.is_done;
+      changeIsDone(!is_done, index)
+      setDone(!is_done);
     };
 
     const handleSubmit = e => {
       e.preventDefault();
       if (!value) return;
       addTodo();
+    };
+
+    const handleRemove = () => {
+      removeTodo(index);
+      setValue('');
+      setDone(false);
     };
   
     return (
@@ -37,15 +41,8 @@ function FormTodo({ todo, addTodo, index, changeTodo, removeTodo }) {
             </div>
           </div>
           <input style={{ textDecoration: is_done ? "line-through" : "" }} type="text" autoFocus className="form-control" value={value} onChange={(e) => {handleChange(e)}} placeholder="Add new todo"></input>
-          <input type="button" className=" btn btn-lg btn-danger" value='X' onClick={() => removeTodo(index)}></input>
+          <input type="button" className=" btn btn-lg btn-danger" value='X' onClick={() => handleRemove(index)}></input>
         </div>
-
-
-      {/* <Form.Group>
-        <Form.Check type='checkbox' checked={is_done} onChange={markDone} />
-        <Form.Control style={{ textDecoration: is_done ? "line-through" : "" }}type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="Add new todo" />
-        <Button variant="outline-danger" onClick={() => removeTodo(index)}>✕</Button>
-      </Form.Group> */}
 
     </Form>
     );
@@ -54,11 +51,11 @@ function FormTodo({ todo, addTodo, index, changeTodo, removeTodo }) {
 
   function ToDoList() {
 
-    const [todos, setTodos] = useState([{'text': ''}]);
+    const [todos, setTodos] = useState([{'text': '', 'is_done': false, 'id': nanoid()}]);
   
     const addTodo = () => {
       const newTodos = [...todos];
-      newTodos.push({'text': ''});
+      newTodos.push({'text': '', 'is_done': false, 'id': nanoid()});
       setTodos(newTodos);
     };
 
@@ -68,31 +65,37 @@ function FormTodo({ todo, addTodo, index, changeTodo, removeTodo }) {
       setTodos(newTodos);
     }
 
+    const changeIsDone = (is_done, index) => {
+      const newTodos = [...todos];
+      newTodos[index].is_done = is_done;
+      setTodos(newTodos);
+    }
+
     const removeTodo = index => {
       let newTodos = [...todos];
       
       if (newTodos.length === 1) {
         newTodos[0].text = '';
+        newTodos[0].is_done = false;
       } else {
         newTodos.splice(index, 1);
       }
       setTodos(newTodos);
-         
     };
   
     return (
       <div className="app">
         <div className="container">
           <h1 className="text-center mb-4">Todo List</h1>
-          {/* <FormTodo key={0} index={0} addTodo={addTodo} removeTodo={removeTodo} /> */}
           <div>
             {todos.map((todo, index) => (
                 <FormTodo
-                  key={index}
+                  key={todo.id}
                   index={index}
                   todo={todo}
                   addTodo={addTodo}
                   changeTodo={changeTodo}
+                  changeIsDone={changeIsDone}
                   removeTodo={removeTodo}
                 />
             ))}
