@@ -1,9 +1,7 @@
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app import crud, models, schemas
+from app import crud, schemas
 from app.api import session_gen
 from app.auth.endpoints.auth import get_current_active_user
 
@@ -13,7 +11,7 @@ router = APIRouter()
 @router.get('/todo', response_model=schemas.ToDoListCreate)
 def get_todo(current_user: schemas.User = Depends(get_current_active_user),
              db: Session = Depends(session_gen.get_db)):
-    return crud.todolist.get_by_owner(current_user.id, db)
+    return crud.todolist.get_or_create(current_user.id, db)
 
 @router.post('/todo/create', response_model=schemas.ToDoListCreate)
 def create_todo(todo_in: schemas.ToDoListBase,

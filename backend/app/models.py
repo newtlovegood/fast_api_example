@@ -1,3 +1,4 @@
+from colorama import Fore
 from sqlalchemy import Boolean, Integer, Column, ForeignKey, String, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -35,6 +36,15 @@ class ToDoList(Base):
     
     id = Column(Integer, primary_key=True, index=True) 
     items = Column(String)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey('users.id'))
     owner = relationship('User', back_populates='todolist')
+    list_items = relationship('ToDoItem')
 
+
+class ToDoItem(Base):
+    __tablename__ = 'todoitems'
+
+    id = Column(Integer, primary_key=True, index=True) 
+    content = Column(String, default='')
+    is_done = Column(Boolean, default=False)
+    list_id = Column(Integer, ForeignKey('todolists.id'))

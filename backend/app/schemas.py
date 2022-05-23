@@ -4,8 +4,20 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
+class ToDoItemBase(BaseModel):
+    content: str = ''
+    is_done: Optional[bool] = False
+
+
+class ToDoItemCreate(ToDoItemBase):
+    list_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class ToDoListBase(BaseModel):
-    items: str
+    items: List[ToDoItemBase] = []
     
 
 class ToDoListCreate(ToDoListBase):
@@ -43,7 +55,7 @@ class UserBase(BaseModel):
     is_active: Optional[bool] = True
     is_superuser: Optional[bool] = False
     posts: List[Post] = []
-    todo: str
+    todo: Optional[ToDoListCreate] = None
 
 
 class UserCreate(UserBase):
