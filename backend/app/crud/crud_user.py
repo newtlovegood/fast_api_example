@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from pydantic import EmailStr
 
 from app.crud.utils import create_unique_username
-from app.schemas import UserCreate, UserUpdate
+from app.schemas import UserCreate, UserUpdate, ToDoItemCreate
 from app.models import User
 from app.security import get_password_hash
+from app import crud
 
 
 class CRUDUser:
@@ -30,6 +31,10 @@ class CRUDUser:
         )
         db.add(db_user)
         db.commit()
+
+        # create default todolist
+        user = self.get_by_email(db, obj_in.email)
+        crud.todoitem.create(ToDoItemCreate(user_id=user.id), db)
         db.refresh(db_user)
         return db_user
 

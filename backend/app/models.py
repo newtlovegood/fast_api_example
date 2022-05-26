@@ -15,8 +15,8 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean(), default=False)
-    posts = relationship('Post', back_populates="authors")
-    todolist = relationship('ToDoList', back_populates='owner')
+    posts = relationship('Post', back_populates="author")
+    todoitems = relationship('ToDoItem', back_populates='user')
 
 
 class Post(Base):
@@ -27,18 +27,10 @@ class Post(Base):
     content = Column(String)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+
     author_id = Column(Integer, ForeignKey("users.id"))
-    authors = relationship('User', back_populates='posts')
+    author = relationship('User', back_populates='posts')
 
-
-class ToDoList(Base):
-    __tablename__ = 'todolists'
-    
-    id = Column(Integer, primary_key=True, index=True) 
-    items = Column(String)
-    owner_id = Column(Integer, ForeignKey('users.id'))
-    owner = relationship('User', back_populates='todolist')
-    list_items = relationship('ToDoItem')
 
 
 class ToDoItem(Base):
@@ -47,4 +39,6 @@ class ToDoItem(Base):
     id = Column(Integer, primary_key=True, index=True) 
     content = Column(String, default='')
     is_done = Column(Boolean, default=False)
-    list_id = Column(Integer, ForeignKey('todolists.id'))
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='todoitems')

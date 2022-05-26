@@ -6,22 +6,20 @@ from pydantic import BaseModel, EmailStr
 
 class ToDoItemBase(BaseModel):
     content: str = ''
-    is_done: Optional[bool] = False
+    is_done = False
 
 
 class ToDoItemCreate(ToDoItemBase):
-    list_id: int
-
-    class Config:
-        orm_mode = True
+    user_id: int
 
 
-class ToDoListBase(BaseModel):
-    items: List[ToDoItemBase] = []
-    
+class ToDoItemUpdate(ToDoItemBase):
+    pass
 
-class ToDoListCreate(ToDoListBase):
-    owner_id: int
+
+class ToDoItem(ToDoItemBase):
+    id: int
+    user_id: int
     
     class Config:
         orm_mode = True
@@ -55,7 +53,7 @@ class UserBase(BaseModel):
     is_active: Optional[bool] = True
     is_superuser: Optional[bool] = False
     posts: List[Post] = []
-    todo: Optional[ToDoListCreate] = None
+    todoitems: List[ToDoItem] = []
 
 
 class UserCreate(UserBase):
@@ -69,7 +67,7 @@ class UserUpdate(BaseModel):
 
 
 class User(UserBase):
-    id: Optional[int] = None
+    id: int
     hashed_password: str
     
     class Config:

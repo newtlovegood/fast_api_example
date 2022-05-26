@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta
-from typing import Optional, Any
+from typing import Optional, Union
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.encoders import jsonable_encoder
@@ -71,8 +71,7 @@ async def get_current_active_user(current_user: schemas.User = Depends(get_curre
 
 @router.post("/token")
 async def login(login_data: OAuth2PasswordRequestForm = Depends(), db:  Session = Depends(session_gen.get_db)):
-
-    # login_data: OAuth2PasswordRequestForm = Depends()  is used TO ENABLE FASTAPI/DOCS Auth
+ 
     user = authenticate_user(login_data.username, login_data.password, db)
     if not user:
         raise HTTPException(

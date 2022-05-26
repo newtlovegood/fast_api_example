@@ -40,7 +40,7 @@ def create_user(user_in: schemas.UserCreate, db: Session = Depends(session_gen.g
     # check if email is Unique
     if crud.user.get_by_email(db, user_in.email):
         return HTTPException(status_code=400, detail="Email is already used")
-    
+    # set unique username
     while True:
         try:
             user = crud.user.create(db, user_in)

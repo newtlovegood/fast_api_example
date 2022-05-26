@@ -1,9 +1,7 @@
-from json.tool import main
 import uvicorn
 
 import logging 
 import logging.config
-from time import asctime
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
